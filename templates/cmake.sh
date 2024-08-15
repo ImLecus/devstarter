@@ -1,5 +1,5 @@
 #!/bin/bash
-# C language project template
+# C language project template with CMake
 
 make_template(){
     cd $cwd || exit
@@ -27,5 +27,21 @@ EOF
 EOF
 )
     echo "$config" > include/config.h || abort_process
+
+    mkdir -p build
+
+    local cmake_lists=$(cat << 'EOF'
+cmake_minimum_required(VERSION 3.10)
+
+project(new_cmake_project VERSION 1.0 LANGUAGES C)
+
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD_REQUIRED True)
+
+add_executable(program main.c)
+
+EOF
+)
+    echo "$cmake_lists" > CMakeLists.txt || abort_process
 
 }

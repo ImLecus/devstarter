@@ -1,7 +1,7 @@
 #!/bin/bash
 # devstarter entry point
-source ./defs.sh
-
+DIR="$(dirname "$(realpath "$0")")"
+source "$DIR/defs.sh"
 check_args $# 1
 
 case $1 in
@@ -9,7 +9,9 @@ case $1 in
         check_args $# 2
         language=$2
         check_language
-        echo "Creating project"
+        echo "Creating project at $cwd"
+        source "$templates_folder/$language.sh"
+        make_template
         ;;
     "init")
         echo "Hello world!"
