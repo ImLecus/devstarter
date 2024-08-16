@@ -3,7 +3,7 @@
 
 make_repo(){
     cd $cwd || exit
-    local readme="# ${project_name}"
+    local readme="# ${options["project_name"]}"
 
     echo "$readme" > README.md || abort_process
 

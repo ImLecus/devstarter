@@ -1,7 +1,6 @@
 #!/bin/bash
 # A collection of ANSI escape characters
 # including the colors of some templates.
-
 BOLD='\033[1m'
 UNDERLINE='\033[4m'
 
@@ -11,5 +10,7 @@ YELLOW='\033[33m'
 BLUE='\033[34m'
 RESET='\033[0m'
 
+# Custom template colors
+# Make sure the color starts with "c_"
 c_QUARZUM='\033[38;2;43;147;72m'
 c_CPP='\033[38;2;214;62;193m'

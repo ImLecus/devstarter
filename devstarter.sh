@@ -7,8 +7,8 @@ check_args $# 1
 case $1 in
     "create")
         check_args $# 2
-        language=$2
-        check_language
+        options["template"]=$2
+        check_template
 
        
         if [[ $# -gt 2 ]]; then 
