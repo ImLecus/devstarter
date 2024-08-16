@@ -14,12 +14,14 @@ case $1 in
         make_template
         ;;
     "init")
-        echo "Hello world!"
+        init_manager
+        ;;
+    "help")
+        print_help
         ;;
     *)
         echo "Undefined command"
-        echo $create_usage
-        exit 2
+        print_help
         ;;
 esac
 
