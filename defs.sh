@@ -1,12 +1,12 @@
 #!/bin/bash
 language="none"
 create_usage="Usage: devstarter create [language] [name]"
-
+project_name="my_project"
 cwd=$(pwd)
 templates_folder="$DIR/templates"
 source "$DIR/src/colors.sh"
 source "$DIR/src/menu.sh"
-
+source "$DIR/src/repo.sh"
 check_args() {
     if [[ $1 -lt $2 ]]; then
         echo $create_usage
@@ -43,7 +43,6 @@ print_help(){
     echo "  c:          C language"
     echo "  cmake:      C language with CMake"
     echo "  cpp*:        C++ language"
-    echo "  repo:       Initial repository files"
     echo "  quarzum*:    Quarzum language"
     echo "  node*:       Node JS language"
     echo "  ruby*:       Ruby language"
@@ -93,8 +92,40 @@ init_manager(){
     print_menu
     wait_for_response
     language=${template_ids[$menu_pointer_position]}
+    menu_pointer_position=0
     ask_for_repo
     wait_for_response
     options["repo"]="$menu_pointer_position"
+    menu_pointer_position=0
+    echo "Project name: "
+    read project_name
 
+    create_project
+}
+
+
+create_project(){
+    if [[ options["repo"] -eq 0 ]]; then
+        make_repo
+        git init || echo "Git is not installed. If it's a devstarter error, use 'git init' manually."
+    fi
+    echo "Creating project at $cwd"
+    source "$templates_folder/$language.sh"
+    make_template
+}
+
+parse_flag(){
+    if [[ $1 == -* ]]; then
+        case $1 in
+            "-r")
+                options["repo"]=0
+                ;;
+            *)
+                echo "Unknown flag '$1'"
+                exit 5
+                ;;
+        esac
+    else
+        project_name=$1
+    fi
 }

@@ -42,7 +42,6 @@ update_menu_pointer(){
 #
 # Resets the last menu data
 close_menu(){
-    menu_pointer_position=0
     menu_entries=()
     menu_header=""
     menu_lines=0;

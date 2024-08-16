@@ -1,21 +1,14 @@
 #!/bin/bash
 # Repository template (README and gitignore)
 
-make_template(){
+make_repo(){
     cd $cwd || exit
-    local readme=$(cat << 'EOF'
-# My repository
-
-EOF
-)
+    local readme="# ${project_name}"
 
     echo "$readme" > README.md || abort_process
 
 
-    local gitignore=$(cat << 'EOF'
-
-EOF
-)
+    local gitignore=""
     echo "$gitignore" > .gitignore || abort_process
 
 }

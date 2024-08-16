@@ -9,9 +9,17 @@ case $1 in
         check_args $# 2
         language=$2
         check_language
-        echo "Creating project at $cwd"
-        source "$templates_folder/$language.sh"
-        make_template
+
+       
+        if [[ $# -gt 2 ]]; then 
+            shift 2
+
+            for arg in "$@"; do
+                parse_flag "$arg"
+            done
+        fi
+
+        create_project
         ;;
     "init")
         init_manager
