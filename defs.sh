@@ -51,7 +51,7 @@ print_help(){
     echo "Templates:"
     echo "  c:          C language"
     echo "  cmake:      C language with CMake"
-    echo "  cpp*:        C++ language"
+    echo "  cpp:        C++ language"
     echo "  quarzum:    Quarzum language"
     echo "  node*:       Node JS language"
     echo "  ruby*:       Ruby language"

@@ -14,3 +14,4 @@ RESET='\033[0m'
 # Make sure the color starts with "c_"
 c_QUARZUM='\033[38;2;43;147;72m'
 c_CPP='\033[38;2;214;62;193m'
+c_WEB='\033[38;2;234;134;46m'

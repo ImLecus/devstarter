@@ -9,6 +9,8 @@ TEMPLATE_NAMES=(
     "${c_QUARZUM}Quarzum"
     "${c_CPP}C++"
     "${BLUE}Python"
+    "${c_WEB}Web (Vanilla)"
+    "${YELLOW}Node JS"
 )
 
 # Template identifiers
@@ -20,4 +22,6 @@ TEMPLATE_IDS=(
     "quarzum"
     "cpp"
     "python"
+    "web"
+    "node"
 )
