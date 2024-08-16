@@ -13,6 +13,7 @@ create_usage="Usage: devstarter create [templates] [name]"
 cwd=$(pwd)
 
 # Project folders
+DIR="$(dirname "$(realpath "$0")")"
 templates_folder="$DIR/templates"
 source "$DIR/src/colors.sh"
 source "$DIR/src/menu.sh"
@@ -51,7 +52,7 @@ print_help(){
     echo "  c:          C language"
     echo "  cmake:      C language with CMake"
     echo "  cpp*:        C++ language"
-    echo "  quarzum*:    Quarzum language"
+    echo "  quarzum:    Quarzum language"
     echo "  node*:       Node JS language"
     echo "  ruby*:       Ruby language"
     echo "  python:     Python language"
@@ -68,7 +69,7 @@ print_menu(){
     menu_header+="Create a new project\n"
     menu_header+="--------------------\n"
     menu_header+="Which template do you want to use?\n"
-    menu_header+="(Move with the up and down arrows, confirm with Enter)\n\n"
+    menu_header+="(Move with the up and down arrows, confirm with Enter)\n"
     show_menu "${TEMPLATE_NAMES[@]}"
 }
 
@@ -90,7 +91,7 @@ init_manager(){
     menu_pointer_position=0
     echo "Project name: "
     read options["project_name"]
-
+    echo ""
     create_project
 }
 
@@ -101,9 +102,9 @@ create_project(){
         make_repo
         git init || echo "Git is not installed. If it's a devstarter error, use 'git init' manually."
     fi
-    echo "Creating project at $cwd"
     source "$templates_folder/${options["template"]}.sh"
     make_template
+    echo "Created project '${options["project_name"]}' at $cwd"
 }
 
 parse_flag(){
