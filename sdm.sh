@@ -1,14 +1,5 @@
 #!/bin/bash
-# devstarter entry point
-
-# options:
-#   repo: initializes the 'repo.sh' template
-#   folder: creates a folder and initializes the template inside
-#   template: defines the template id
-#   project_name: defines the project name
-declare -A options
-options["template"]=""
-options["project_name"]="my_project"
+# sdm entry point
 
 create_usage="Usage: devstarter create [templates] [name]"
 cwd=$(pwd)
@@ -30,8 +21,8 @@ check_args() {
 }
 
 check_template(){
-    if [[ ! -f "$templates_folder/${options["template"]}.sh" ]]; then
-        echo "Unsupported template '${options["template"]}'"
+    if [[ ! -f "$templates_folder/$project_language.sh" ]]; then
+        echo "Unsupported template '$project_language'"
         exit 3
     fi
 }
@@ -41,13 +32,55 @@ abort_process(){
     exit 4
 }
 
-# Creates a configuration file when
+#
+#   PROJECT CONFIGURATION FILE AND OPTIONS
+#
+
+# Determines the project name. Generally used on
+# README.md files.
+project_name=""
+
+# The target project version.
+project_version=""
+
+# The project main language. Used to execute the 
+# project or any related package manager.
+project_language=""
+
+
+# Creates/updates a configuration file when
 # a project is created.
-# The file is called '.devstarter' and it contains
+#
+# The file is called '.sdm' and it contains
 # the project information stored as bash variables.
-create_config_file(){
-    echo "" > .devstarter || abort_process
+# If the first argument is true, the config file will be overwritten.
+config_file(){
+    touch "$cwd/.sdm"
+    truncate -s 0 "$cwd/.sdm"
+    if [[ -n $project_name ]]; then 
+        echo "project_name=\"$project_name\"" >> "$cwd/.sdm" || abort_process
+    fi
+    if [[ -n $project_version ]]; then 
+        echo "project_version=\"$project_version\"" >> "$cwd/.sdm" || abort_process
+    fi
+    if [[ -n $project_language ]]; then 
+        echo "project_language=\"$project_language\"" >> "$cwd/.sdm" || abort_process
+    fi
+    
 }
+
+# Checks if the .sdm file exists and executes it as a sh file.
+read_config(){
+    if [[ -f "$cwd/.sdm" ]]; then
+        source "$cwd/.sdm"
+        true;
+    else false; fi
+}
+
+
+#
+#
+#
 
 print_help(){
     echo "Devstarter usage"
@@ -56,6 +89,7 @@ print_help(){
     echo "  create [template]: Initializes a template"
     echo "  init: Starts the template manager"
     echo "  help: Shows this message"
+    echo "  update [type]: Updates the project version"
     echo ""
     echo "Templates:"
     echo "  c:          C language"
@@ -92,14 +126,15 @@ ask_for_repo(){
 init_manager(){
     print_menu
     wait_for_response
-    options["template"]=${TEMPLATE_IDS[$menu_pointer_position]}
+    project_language=${TEMPLATE_IDS[$menu_pointer_position]}
+    project_version="1.0"
     menu_pointer_position=0
     ask_for_repo
     wait_for_response
     options["repo"]="$menu_pointer_position"
     menu_pointer_position=0
     echo "Project name: "
-    read options["project_name"]
+    read -r project_name
     echo ""
     create_project
 }
@@ -111,10 +146,10 @@ create_project(){
         make_repo
         git init || echo "Git is not installed. If it's a devstarter error, use 'git init' manually."
     fi
-    source "$templates_folder/${options["template"]}.sh"
+    source "$templates_folder/$project_language.sh"
     make_template
-    create_config_file
-    echo "Created project '${options["project_name"]}' at $cwd"
+    config_file
+    echo "Created project '$project_name' at $cwd"
 }
 
 parse_flag(){
@@ -129,7 +164,7 @@ parse_flag(){
                 ;;
         esac
     else
-        options["project_name"]=$1
+        project_name=$1
     fi
 }
 check_args $# 1
@@ -137,7 +172,7 @@ check_args $# 1
 case $1 in
     "create")
         check_args $# 2
-        options["template"]=$2
+        project_language=$2
         check_template
 
        
@@ -156,6 +191,13 @@ case $1 in
         ;;
     "help")
         print_help
+        ;;
+    "update")
+        read_config || echo ".sdm file not found"
+        #IFS='.' read -r major minor patch <<< project_version
+        #major=$((major + 1))
+        #project_version="${major}.${minor}.${patch}"
+        config_file
         ;;
     *)
         echo "Undefined command"
