@@ -24,24 +24,17 @@ if [ -d "$DIR/src" ]; then
     sudo cp -r "$DIR/src" "${share_path}/devstarter"
 else
     echo "Error: missing src/ directory"
-    exit 1share_path
-fi
-
-if [ -f "$DIR/defs.sh" ]; then
-    sudo cp "$DIR/defs.sh" "${share_path}/devstarter/"
-else
-    echo "Error: missing defs.sh file"
     exit 1
 fi
 
-if [ -f "$DIR/devstarter.sh" ]; then
-    sudo cp "$DIR/devstarter.sh" "${share_path}/devstarter/"
+if [ -f "$DIR/sdm.sh" ]; then
+    sudo cp "$DIR/sdm.sh" "${share_path}/devstarter/"
 else
-    echo "Error: missing devstarter.sh file"
+    echo "Error: missing sdm.sh file"
     exit 1
 fi
 # Create symbolic link
-sudo ln -s /usr/local/share/devstarter/devstarter.sh /usr/local/bin/devstarter
-chmod +x /usr/local/bin/devstarter
+sudo ln -s /usr/local/share/sdm/sdm.sh /usr/local/bin/sdm
+chmod +x /usr/local/bin/sdm
 
-echo "Devstarter installed without errors"
+echo "SDM installed without errors"

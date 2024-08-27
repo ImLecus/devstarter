@@ -1,4 +1,5 @@
 #!/bin/bash
+# devstarter entry point
 
 # options:
 #   repo: initializes the 'repo.sh' template
@@ -23,7 +24,7 @@ source "$DIR/src/templates.sh"
 # Checks if the numer of arguments is lower than the expected
 check_args() {
     if [[ $1 -lt $2 ]]; then
-        echo $create_usage
+        echo "$create_usage"
         exit 1
     fi
 }
@@ -38,6 +39,14 @@ check_template(){
 abort_process(){
     echo "Something unexpected happened, aborting..."
     exit 4
+}
+
+# Creates a configuration file when
+# a project is created.
+# The file is called '.devstarter' and it contains
+# the project information stored as bash variables.
+create_config_file(){
+    echo "" > .devstarter || abort_process
 }
 
 print_help(){
@@ -104,6 +113,7 @@ create_project(){
     fi
     source "$templates_folder/${options["template"]}.sh"
     make_template
+    create_config_file
     echo "Created project '${options["project_name"]}' at $cwd"
 }
 
@@ -122,3 +132,34 @@ parse_flag(){
         options["project_name"]=$1
     fi
 }
+check_args $# 1
+
+case $1 in
+    "create")
+        check_args $# 2
+        options["template"]=$2
+        check_template
+
+       
+        if [[ $# -gt 2 ]]; then 
+            shift 2
+
+            for arg in "$@"; do
+                parse_flag "$arg"
+            done
+        fi
+
+        create_project
+        ;;
+    "init")
+        init_manager
+        ;;
+    "help")
+        print_help
+        ;;
+    *)
+        echo "Undefined command"
+        print_help
+        ;;
+esac
+

@@ -1,4 +1,4 @@
-# Contributing to Devstarter
+# Contributing to SDM
 
 ## Table of contents
 
